@@ -7,8 +7,14 @@
  */
 
 buildscript {
+    repositories {
+        mavenLocal()
+        jcenter {
+            url "http://jcenter.bintray.com/"
+        }
+    }
     dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
     }
 }
 
@@ -19,44 +25,16 @@ plugins {
     id 'signing'
 }
 
-group = "com.example.applications"
-archivesBaseName = "example-application"
-version = "1.4.7"
+apply plugin: 'com.bmuschko.nexus'
 
-repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-}
+group = "de.uniks.vs.methodresourceprediction"
+archivesBaseName = "annotations"
+version = "1.0.0-SNAPSHOT"
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:28.0-jre'
-
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-//signing {
-//    sign configurations.archives
-//}
 
 uploadArchives {
     repositories {
@@ -72,33 +50,45 @@ uploadArchives {
             }
 
             pom.project {
-                name 'Example Application'
+                name 'Annotations used for forecasting method runtimes'
                 packaging 'jar'
                 // optionally artifactId can be defined here
-                description 'A application used as an example on how to set up pushing  its components to the Central Repository.'
-                url 'http://www.example.com/example-application'
+                description 'Annotations used to provide additional information on method to improve forecasting'
+                url 'https://github.com/RalfHerzog'
 
                 scm {
-                    connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
-                    developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
-                    url 'http://foo.googlecode.com/svn/trunk/'
+                    connection 'git@github.com:MethodResourcePrediction/Annotations.git'
+                    developerConnection 'git@github.com:MethodResourcePrediction/Annotations.git'
+                    url 'https://github.com/MethodResourcePrediction/Annotations'
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name 'MIT License'
+                        url 'https://opensource.org/licenses/MIT'
                     }
                 }
 
                 developers {
                     developer {
-                        id 'manfred'
-                        name 'Manfred Moser'
-                        email 'manfred@sonatype.com'
+                        id 'ralfherzog'
+                        name 'Ralf Herzog'
+                        email 'ralf@rherzog.de'
                     }
                 }
             }
         }
     }
+}
+
+extraArchive {
+    sources = false
+    tests = true
+    javadoc = false
+}
+
+nexus {
+    sign = false
+    repositoryUrl = "${nexusUrl}/repository/maven-releases/"
+    snapshotRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
 }

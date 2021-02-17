@@ -1,4 +1,4 @@
-package de.uniks.vs.annotations;
+package de.uniks.vs.methodresourceprediction.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
