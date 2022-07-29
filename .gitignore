@@ -3,13 +3,9 @@
 
 # Ignore Gradle build output directory
 build
-
-*.jar
 bin/
 generated/
 ProfilerExecutions.xml
 *.log
 volume/
-extra_libs/
 file
-bin/

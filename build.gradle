@@ -1,23 +1,17 @@
 buildscript {
     dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
     }
 }
 
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-    id 'maven'
+    id 'maven-publish'
     id 'signing'
 }
 
-apply plugin: 'com.bmuschko.nexus'
-
 repositories {
     jcenter()
-    maven() {
-        url = 'https://srv202.parsens.uni-kassel.de/repository/maven-snapshots/'
-    }
 }
 
 group = "de.uniks.vs.methodresourceprediction"
@@ -26,64 +20,7 @@ version = "1.0.0-SNAPSHOT"
 
 dependencies {
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "${nexusUrl}/repository/maven-releases/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            pom.project {
-                name 'MethodResourcePrediction - Annotations'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'Annotations used to provide additional information on method to improve forecasting'
-                url 'https://github.com/RalfHerzog'
-
-                scm {
-                    connection 'git@github.com:MethodResourcePrediction/Annotations.git'
-                    developerConnection 'git@github.com:MethodResourcePrediction/Annotations.git'
-                    url 'https://github.com/MethodResourcePrediction/Annotations'
-                }
-
-                licenses {
-                    license {
-                        name 'MIT License'
-                        url 'https://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'ralfherzog'
-                        name 'Ralf Herzog'
-                        email 'ralf@rherzog.de'
-                    }
-                }
-            }
-        }
-    }
-}
-
-extraArchive {
-    sources = false
-    tests = true
-    javadoc = false
-}
-
-nexus {
-    sign = false
-    repositoryUrl = "${nexusUrl}/repository/maven-releases/"
-    snapshotRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
+    testImplementation 'junit:junit:4.13.2'
 }
 
 jar {
